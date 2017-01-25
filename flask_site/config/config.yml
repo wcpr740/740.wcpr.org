@@ -1,0 +1,25 @@
+default: &defaultConfig
+  flask: &flaskConfig
+    name: 'WCPR'
+    name_long: 'WCPR - Castle Point Radio'
+    host: 'localhost'
+    port: 5001
+    SECRET_KEY: 'TOTALLY_SECRET_KEY'
+    PREFERRED_URL_SCHEME: https  # http or https
+    APPLICATION_ROOT: '/'
+    DEBUG: True
+    ASSETS_DEBUG: True
+
+
+dev:
+  <<: *defaultConfig
+  now_playing: '\\storage01.stevens.edu\w3wcpr$\now_playing.json'
+
+
+prod: &prodConfig
+  <<: *defaultConfig
+  flask:
+    <<: *flaskConfig
+    DEBUG: False
+    ASSETS_DEBUG: False
+    now_playing: 'now_playing.json'

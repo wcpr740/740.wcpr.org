@@ -22,4 +22,3 @@ prod: &prodConfig
     <<: *flaskConfig
     DEBUG: False
     ASSETS_DEBUG: False
-  now_playing: 'now_playing.json'

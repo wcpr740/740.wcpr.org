@@ -93,3 +93,4 @@ ENV/
 .idea
 bower_components
 static/out
+flask_site/config/config.yml

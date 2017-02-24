@@ -7,13 +7,14 @@ from flask_socketio import emit, join_room, leave_room, rooms
 
 from flask_site import app, sock, config
 from flask_site.libraries.jsonp_wrap import jsonp_support
+from flask_site.libraries.tunein import update_tunein
 
 NOW_PLAYING_FILE_LOC = config.get('now_playing')
 SECONDS_WAIT_FOR_RECHECK = 0.5
 STREAM_DELAY_SECONDS = 12
 
 
-def load_now_playing_and_fix_tz():
+def load_now_playing_and_fix_tz(to_fix=('now', 'last1', 'last2', 'last3', 'last4', 'last5')):
     """ StationPlaylist is in Eastern time so scheduling can still work, but UTC is reported and needs to be fixed.
 
     For this fix to work, the local machine must also be in Eastern time, and must automatically update DST.
@@ -23,11 +24,21 @@ def load_now_playing_and_fix_tz():
     """
     with open(NOW_PLAYING_FILE_LOC) as f:
         now_playing_obj = json.load(f)
-    start = pendulum.parse(now_playing_obj['now']['start']).subtract(hours=pendulum.now().offset_hours)
-    now_playing_obj['now']['start'] = start.isoformat()
+
+    start = {}  # keep record of start times so we can adjust them again in the delayed object
+    for key, song in now_playing_obj.iteritems():
+        if song['cat'].startswith('StationTag') or song['cat'].startswith('BlockTag'):
+            song['title'] = "You're listening to WCPR"
+            song['tag'] = True
+        if song['cat'] == 'OnAirAds':
+            song['ad'] = True
+        if key in to_fix:
+            start[key] = pendulum.parse(song['start']).subtract(hours=pendulum.now().offset_hours)
+            song['start'] = start[key].isoformat()
 
     now_playing_obj_delayed = deepcopy(now_playing_obj)
-    now_playing_obj_delayed['now']['start'] = (start.add(seconds=STREAM_DELAY_SECONDS)).isoformat()
+    for key in start:
+        now_playing_obj_delayed[key]['start'] = (start[key].add(seconds=STREAM_DELAY_SECONDS)).isoformat()
 
     return now_playing_obj, now_playing_obj_delayed
 
@@ -58,6 +69,8 @@ def async_update_now_playing():
 
         now_playing_delayed = new_now_playing_delayed
         sock.emit('on_air', now_playing_delayed, room='delayed', namespace='/now_playing')
+        now = now_playing_delayed['now']
+        update_tunein(now['title'], now['artist'], now['album'], is_commercial=now.get('ad', False))
 
         # set wait until next check time
         elapsed_seconds = (pendulum.now() - pendulum.parse(now_playing['now']['start'])).in_seconds()

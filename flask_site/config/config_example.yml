@@ -4,11 +4,15 @@ default: &defaultConfig
     name_long: 'WCPR - Castle Point Radio'
     host: 'localhost'
     port: 5001
-    SECRET_KEY: 'TOTALLY_SECRET_KEY'
+    SECRET_KEY:
     PREFERRED_URL_SCHEME: https  # http or https
     APPLICATION_ROOT: '/'
     DEBUG: True
     ASSETS_DEBUG: True
+  tunein:
+    station_id:
+    partner_id:
+    partner_key:
 
 
 dev:

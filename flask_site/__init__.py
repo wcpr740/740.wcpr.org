@@ -14,13 +14,14 @@ env = read_env()
 
 config = read_config(MAIN_CONFIG_FILENAME, env)
 flask_config = config.get('flask', {})
+DEBUG = flask_config.get('DEBUG', False)
 
 # THE FLASK INSTANCE
 app = Flask(flask_config['name'])
 app.config.update(flask_config)
 
 # WEBSOCKETS SETUP
-sock = SocketIO(app, async_mode=None)  # async_mode=threading, eventlet, gevent, or None to let application pick
+sock = SocketIO(app, async_mode=None, logger=DEBUG)
 
 # LOAD THE ROUTES
 from flask_site.controllers import *

@@ -9,6 +9,7 @@ default: &defaultConfig
     APPLICATION_ROOT: '/'
     DEBUG: True
     ASSETS_DEBUG: True
+  now_playing: '\\storage01.stevens.edu\w3wcpr$\now_playing.json'
   tunein:
     station_id:
     partner_id:
@@ -17,7 +18,6 @@ default: &defaultConfig
 
 dev:
   <<: *defaultConfig
-  now_playing: '\\storage01.stevens.edu\w3wcpr$\now_playing.json'
 
 
 prod: &prodConfig

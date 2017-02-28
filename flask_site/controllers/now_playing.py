@@ -1,4 +1,5 @@
 import json
+import logging
 from copy import deepcopy
 
 import pendulum
@@ -48,6 +49,14 @@ now_playing, now_playing_delayed = load_now_playing_and_fix_tz()  # needed globa
 has_next_grab_scheduled = False
 
 
+def loop_async_report_errors():
+    while True:
+        try:
+            async_update_now_playing()
+        except Exception as e:
+            logging.exception('Exception occurred')
+
+
 def async_update_now_playing():
     global now_playing
     global now_playing_delayed
@@ -75,7 +84,8 @@ def async_update_now_playing():
         # set wait until next check time
         elapsed_seconds = (pendulum.now() - pendulum.parse(now_playing['now']['start'])).in_seconds()
         remaining_seconds = int(now_playing['now']['len']) - elapsed_seconds
-        remaining_seconds = 0 is remaining_seconds < 0
+        if remaining_seconds < 0:
+            remaining_seconds = 0
         sleep_time = remaining_seconds + SECONDS_WAIT_FOR_RECHECK
         has_next_grab_scheduled = True
 
@@ -87,7 +97,7 @@ def start_thread_if_necessary():
     """
     global thread
     if thread is None:
-        thread = sock.start_background_task(target=async_update_now_playing)
+        thread = sock.start_background_task(target=loop_async_report_errors)
 
 
 @app.route('/now_playing')

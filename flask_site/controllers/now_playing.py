@@ -1,4 +1,5 @@
 import json
+import time
 import logging
 from copy import deepcopy
 
@@ -24,12 +25,13 @@ def load_now_playing_and_fix_tz(to_fix=('now', 'last1', 'last2', 'last3', 'last4
     :rtype: dict, dict
     """
     with open(NOW_PLAYING_FILE_LOC) as f:
-        now_playing_obj = json.load(f)
+        output = f.read()
+    now_playing_obj = json.loads(output)
 
     start = {}  # keep record of start times so we can adjust them again in the delayed object
     for key, song in now_playing_obj.iteritems():
         if song['cat'].startswith('StationTag') or song['cat'].startswith('BlockTag'):
-            song['title'] = "You're listening to WCPR"
+            song['title'] = "You're Listening to WCPR"
             song['tag'] = True
         if song['cat'] == 'OnAirAds':
             song['ad'] = True

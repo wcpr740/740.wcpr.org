@@ -60,5 +60,14 @@
     "img": "%5U1",
     "start": "%5dT%5hZ",
     "len": "%5S"
+  },
+  "last6": {
+    "artist": "%6a",
+    "title": "%6t",
+    "album": "%6T",
+    "cat": "%6c",
+    "img": "%6U1",
+    "start": "%6dT%6hZ",
+    "len": "%6S"
   }
 }

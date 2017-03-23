@@ -57,6 +57,7 @@ def loop_async_report_errors():
             async_update_now_playing()
         except Exception as e:
             logging.exception('Exception occurred')
+        time.sleep(1)  # file errors might take time to correct - this prevents the same error occurring repeatedly
 
 
 def async_update_now_playing():

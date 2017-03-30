@@ -1,1 +1,1 @@
-from now_playing import *
+from .now_playing import *

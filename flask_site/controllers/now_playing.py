@@ -29,7 +29,7 @@ def load_now_playing_and_fix_tz(to_fix=('now', 'last1', 'last2', 'last3', 'last4
     now_playing_obj = json.loads(output)
 
     start = {}  # keep record of start times so we can adjust them again in the delayed object
-    for key, song in now_playing_obj.iteritems():
+    for key, song in now_playing_obj.items():
         if song['cat'].startswith('StationTag') or song['cat'].startswith('BlockTag'):
             song['title'] = "You're Listening to WCPR"
             song['tag'] = True

@@ -1,6 +1,6 @@
-import json
 import time
 import logging
+from configparser import ConfigParser
 from copy import deepcopy
 
 import pendulum
@@ -24,9 +24,9 @@ def load_now_playing_and_fix_tz(to_fix=('now', 'last1', 'last2', 'last3', 'last4
     :return: now_playing.json fixed, and now_playing.json fixed and delayed
     :rtype: dict, dict
     """
-    with open(NOW_PLAYING_FILE_LOC) as f:
-        output = f.read()
-    now_playing_obj = json.loads(output)
+    output = ConfigParser()
+    output.read(NOW_PLAYING_FILE_LOC)
+    now_playing_obj = output._sections  # get dictionary of output
 
     start = {}  # keep record of start times so we can adjust them again in the delayed object
     for key, song in now_playing_obj.items():

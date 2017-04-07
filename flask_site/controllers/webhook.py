@@ -30,15 +30,9 @@ def validate_signature(key, body, signature):
 
 @app.route('/webhook_receive', methods=['POST'])
 def webhook_receive():
-    """ Listens for GitHub webhooks. When a push occurs on master, pull the changes and restart the server.
-
-    :return:
-    """
-    if DEBUG:  # ignore webhooks in the debug environment
-        return jsonify(success=False, message='Running in debug env, ignoring webhooks.'), 400
-
+    """ Listens for GitHub webhooks. When a push occurs on master, pull the changes and restart the server. """
     text_body = request.get_data()
-    github_signature = request.headers['x-hub-signature']
+    github_signature = request.headers['X-Hub-Signature']
 
     if not validate_signature(github_secret, text_body, github_signature):
         return jsonify(success=False, message='Invalid GitHub signature'), 403

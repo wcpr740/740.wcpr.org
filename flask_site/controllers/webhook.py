@@ -57,5 +57,5 @@ def webhook_receive():
         return jsonify(success=True, message="Ignored commit to branch that isn't %s." % deploy_branch), 204
 
     # Everything is validated, deploy new version!
-    detached_process(['python', 'update_and_start.py', env])
+    detached_process(['python', 'deploy.py', env])
     return jsonify(success=True, message="Updating"), 200

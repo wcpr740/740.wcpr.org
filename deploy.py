@@ -3,13 +3,19 @@ import sys
 import signal
 import shutil
 import logging
+import pip
 
 try:
     import yaml
 except ImportError:
-    import pip
     pip.main(['install', 'pyyaml'])  # assure yaml is installed for read_config
     import yaml
+
+try:
+    import virtualenv
+except ImportError:
+    pip.main(['install', 'virtualenv'])
+    import virtualenv
 
 from env_load.env import read_env
 from env_load.config import read_config

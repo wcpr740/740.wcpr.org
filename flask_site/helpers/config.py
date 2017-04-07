@@ -6,8 +6,8 @@ from flask_site.libraries.yaml_ordered_loader import ordered_load
 def read_config(filename, env=None):
     """ Open the YAML config if it exists, and load an environment if specified.
 
-    :param str filename: defaults to `config.yml`
-    :param str env: defaults to `default`, make it `dev`, `prod`, `test`, etc.
+    :param str filename: file name and location of config file to read
+    :param str env: env to read from config file. If None specified, returns entire config file
     :return: the loaded config `dict`
     :rtype: dict
     """

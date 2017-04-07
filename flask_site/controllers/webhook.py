@@ -47,7 +47,7 @@ def webhook_receive():
     if event_type != 'push':
         return jsonify(success=True, message="Ignoring event, only watching for push."), 204
 
-    payload = request.get_json()
+    payload = request.get_json(force=True)  # force because GitHub doesn't send mimetype application/json
     if 'refs/heads' not in payload['ref']:
         return jsonify(success=True, message="Invalid payload (missing refs/heads)."), 204
 

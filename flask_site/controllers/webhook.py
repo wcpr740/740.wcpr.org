@@ -35,7 +35,7 @@ def webhook_receive():
     :return:
     """
     if DEBUG:  # ignore webhooks in the debug environment
-        return
+        return jsonify(success=False, message='Running in debug env, ignoring webhooks.'), 400
 
     text_body = request.get_data()
     github_signature = request.headers['x-hub-signature']

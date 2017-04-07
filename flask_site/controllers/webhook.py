@@ -1,9 +1,10 @@
 import hmac
 import hashlib
+import json
 
 from flask import request, jsonify
 
-from flask_site import app, config, DEBUG, env
+from flask_site import app, config, env
 
 from subprocess_commands import detached_process
 
@@ -31,17 +32,16 @@ def validate_signature(key, body, signature):
 @app.route('/webhook_receive', methods=['POST'])
 def webhook_receive():
     """ Listens for GitHub webhooks. When a push occurs on master, pull the changes and restart the server. """
-    text_body = request.get_data()
-    github_signature = request.headers['X-Hub-Signature']
+    github_signature = request.headers.get('X-Hub-Signature')
 
-    if not validate_signature(github_secret, text_body, github_signature):
+    if not validate_signature(github_secret, request.get_data(), github_signature):
         return jsonify(success=False, message='Invalid GitHub signature'), 403
 
-    event_type = request.headers['X-GitHub-Event']
+    event_type = request.headers.get('X-GitHub-Event')
     if event_type != 'push':
         return jsonify(success=True, message="Ignoring event, only watching for push."), 204
 
-    payload = request.get_json(force=True)  # force because GitHub doesn't send mimetype application/json
+    payload = request.json
     if 'refs/heads' not in payload['ref']:
         return jsonify(success=True, message="Invalid payload (missing refs/heads)."), 204
 

@@ -9,6 +9,10 @@ default: &defaultConfig
     APPLICATION_ROOT: '/'
     DEBUG: True
     ASSETS_DEBUG: True
+  github:
+    branch: master
+    webhook_secret:
+  pidfile: 740.pid
   now_playing: '\\storage01.stevens.edu\w3wcpr$\now_playing.json'
   tunein:
     station_id:

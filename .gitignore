@@ -94,3 +94,5 @@ ENV/
 bower_components
 static/out
 flask_site/config/config.yml
+
+/*.pid

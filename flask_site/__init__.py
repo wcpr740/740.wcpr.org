@@ -1,11 +1,12 @@
 import os
+from datetime import datetime
 
 from flask import Flask
 
 from flask_socketio import SocketIO
 
-from flask_site.helpers.config import read_config
-from flask_site.helpers.env import read_env
+from env_load.config import read_config
+from env_load.env import read_env
 
 # THE CONFIGURATION
 CONFIG_FOLDER = os.path.abspath('flask_site/config')
@@ -13,6 +14,7 @@ MAIN_CONFIG_FILENAME = os.path.join(CONFIG_FOLDER, 'config.yml')
 env = read_env()
 
 config = read_config(MAIN_CONFIG_FILENAME, env)
+config['start_time'] = datetime.now()
 flask_config = config.get('flask', {})
 DEBUG = flask_config.get('DEBUG', False)
 

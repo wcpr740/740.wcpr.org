@@ -1,6 +1,6 @@
 import os
 
-from flask_site.libraries.yaml_ordered_loader import ordered_load
+from env_load.yaml_ordered_loader import ordered_load
 
 
 def read_config(filename, env=None):

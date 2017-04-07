@@ -1,6 +1,6 @@
 import hmac
 import hashlib
-import json
+import sys
 
 from flask import request, jsonify
 
@@ -52,4 +52,4 @@ def webhook_receive():
 
     # Everything is validated, deploy new version!
     detached_process(['python', 'deploy.py', env])
-    return jsonify(success=True, message="Updating"), 200
+    sys.exit()

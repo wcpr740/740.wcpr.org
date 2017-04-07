@@ -4,6 +4,7 @@ import signal
 import shutil
 import logging
 import pip
+import time
 
 try:
     import yaml
@@ -36,6 +37,8 @@ def main():
         detached_process(['python', os.path.realpath(__file__)])
         sys.exit()
 
+    time.sleep(3)  # give original process time to kill itself
+
     # set working directory to directory of file
     logger.info('Changing working directory.')
     abspath = os.path.abspath(__file__)
@@ -49,6 +52,7 @@ def main():
     pidfile = conf['pidfile']
     branch = conf['github']['branch']
 
+    """ Original process must kill itself since this process is a spawn of it.
     # kill the old process if it is running and existed
     if os.path.isfile(pidfile):
         logger.info('Killing old process.')
@@ -62,9 +66,11 @@ def main():
             except PermissionError:
                 logger.warning('Encountered permission error closing old process -- assuming it is already killed.')
         os.remove(pidfile)
+    """
 
     # pull latest changes to local repo
     logger.info('Pulling latest info.')
+    blocking_process(['git', 'reset', '--hard', 'HEAD'])
     blocking_process(['git', 'pull', 'origin', branch])
     blocking_process(['git', 'checkout', branch])
 

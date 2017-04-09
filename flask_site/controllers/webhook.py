@@ -6,6 +6,8 @@ from flask import request, jsonify
 
 from flask_site import app, config, env
 
+from flask_socketio import disconnect
+
 from subprocess_commands import detached_process
 
 github_config = config['github']
@@ -51,5 +53,6 @@ def webhook_receive():
         return jsonify(success=True, message="Ignored commit to branch that isn't %s." % deploy_branch), 204
 
     # Everything is validated, deploy new version!
+    disconnect()
     detached_process(['python', 'deploy.py', env])
     sys.exit()

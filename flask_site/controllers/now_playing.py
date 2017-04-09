@@ -17,7 +17,7 @@ SECONDS_WAIT_FOR_RECHECK = 0.5
 STREAM_DELAY_SECONDS = 12
 
 
-def load_now_playing_and_fix_tz(to_fix=('now', 'last1', 'last2', 'last3', 'last4', 'last5')):
+def load_now_playing_and_fix_tz(to_fix=('now', 'last1', 'last2', 'last3', 'last4', 'last5', 'last6')):
     """ StationPlaylist is in Eastern time so scheduling can still work, but UTC is reported and needs to be fixed.
 
     For this fix to work, the local machine must also be in Eastern time, and must automatically update DST.

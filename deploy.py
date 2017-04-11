@@ -52,9 +52,9 @@ def main():
     pidfile = conf['pidfile']
     branch = conf['github']['branch']
 
-    """ Original process must kill itself since this process is a spawn of it.
-    # kill the old process if it is running and existed
+    # wait for old process to die (Original process must kill itself since this process is a spawn of it.)
     if os.path.isfile(pidfile):
+        """
         logger.info('Killing old process.')
         with open(pidfile) as f:
             pid = f.read()
@@ -65,8 +65,8 @@ def main():
                 os.kill(int(pid), signal.SIGTERM)
             except PermissionError:
                 logger.warning('Encountered permission error closing old process -- assuming it is already killed.')
+        """
         os.remove(pidfile)
-    """
 
     # pull latest changes to local repo
     logger.info('Pulling latest info.')
@@ -91,4 +91,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception:
+        logger.exception('Hit exception')

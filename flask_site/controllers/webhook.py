@@ -1,12 +1,11 @@
 import hmac
 import hashlib
 import sys
+import os
 
 from flask import request, jsonify
 
-from flask_site import app, config, env
-
-from flask_socketio import disconnect
+from flask_site import app, config, env, sock
 
 from subprocess_commands import detached_process
 
@@ -53,6 +52,5 @@ def webhook_receive():
         return jsonify(success=True, message="Ignored commit to branch that isn't %s." % deploy_branch), 204
 
     # Everything is validated, deploy new version!
-    disconnect()
     detached_process(['python', 'deploy.py', env])
-    sys.exit()
+    os._exit(0)
